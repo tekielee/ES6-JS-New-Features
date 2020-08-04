@@ -373,3 +373,22 @@ rect.z     = 1000
 rect.color = "red"
 console.log(rect.x, rect.y, rect.z, rect.color)
 
+//Symbol Type
+console.log('Symbol Type');
+console.log(Symbol("foo") !== Symbol("foo"));
+const foo1 = Symbol();
+console.log(foo);
+const bar1 = Symbol()
+console.log('symbol');
+console.log(typeof foo1 === "symbol");
+console.log(typeof bar1 === "symbol");
+
+let obj3 = {}
+obj3[foo] = "foo"
+obj3[bar] = "bar"
+JSON.stringify(obj3) // {}
+console.log('object');
+console.log(Object.keys(obj3)); // []
+console.log(Object.getOwnPropertyNames(obj3)); // []
+console.log(Object.getOwnPropertySymbols(obj3)); // [ foo, bar ]
+
