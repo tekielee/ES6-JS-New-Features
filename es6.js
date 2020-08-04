@@ -156,4 +156,73 @@ console.log("𠮷".codePointAt(0) == 0x20BB7);
 for (let codepoint of "𠮷") 
 	console.log(codepoint);
 
-	
+//Enhanced Regular Expression
+//Regular Expression Sticky Matching	
+
+let parser = (input, match) => {
+    for (let pos = 0, lastPos = input.length; pos < lastPos; ) {
+        for (let i = 0; i < match.length; i++) {
+            match[i].pattern.lastIndex = pos;
+            let found;
+            if ((found = match[i].pattern.exec(input)) !== null) {
+                match[i].action(found);
+                pos = match[i].pattern.lastIndex;
+                break;
+            }
+        }
+    }
+}
+
+let report = (match) => {
+    console.log(JSON.stringify(match));
+}
+
+console.log(parser("Foo 1 Bar 7 Baz 42", [
+    { pattern: /Foo\s+(\d+)/y, action: (match) => report(match) },
+    { pattern: /Bar\s+(\d+)/y, action: (match) => report(match) },
+    { pattern: /Baz\s+(\d+)/y, action: (match) => report(match) },
+    { pattern: /\s*/y,         action: (match) => {}            }
+]));
+
+//Enhanced Object Properties
+//Property Shorthand
+
+var x = 0, y = 0;
+obj = { x, y };
+
+console.log(obj);
+
+//Computed Property Names
+
+function quux() {
+	return 'foo';
+}
+
+let obj1 = {
+    foo: "bar",
+    [ "baz" + quux() ]: 42
+}
+
+console.log(obj1);
+
+//Method Properties
+
+obj2 = {
+    foo (a, b) {
+		return 'foo';
+    },
+    bar (x, y) {
+        return 'bar';
+    },
+    *quux (x, y) {
+    	return 'quux';
+    }
+};
+
+console.log(obj2.foo());
+console.log(obj2.bar());
+console.log(obj2.quux());
+
+//Destructuring Assignment
+//Array Matching
+
