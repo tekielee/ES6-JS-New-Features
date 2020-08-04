@@ -226,3 +226,150 @@ console.log(obj2.quux());
 //Destructuring Assignment
 //Array Matching
 
+var list = [ 1, 2, 3 ];
+var [ a, , b ] = list;
+console.log(list);
+console.log([a, , b]);
+console.log([ b, a ] = [ a, b ]);
+
+//Object Matching, Shorthand Notation
+
+function getASTNode() {
+	return {op : 'op1', lhs : 'lhs1', rhs : 'rhs1'};
+}
+
+var { op, lhs, rhs } = getASTNode();
+console.log(op + ' ' + lhs + ' ' + rhs);
+
+//Object Matching, Deep Matching
+console.log('Object Matching, Deep Matching');
+
+function getASTNode1() {
+	return {op : 'op1', lhs : { op : 'lhs1' }, rhs : 'rhs1'};
+}
+
+var { op: a, lhs: { op: b }, rhs: c } = getASTNode1();
+console.log(a + ' ' + b + ' ' + c);
+
+//Object And Array Matching, Default Values
+
+var obj = { a: 1 };
+var list = [ 1 ];
+var { a, b = 2 } = obj;
+var [ x, y = 2 ] = list;
+
+console.log(a + ' ' + b + ' ' + x + ' ' + y);
+
+//Parameter Context Matching
+
+function f2 ([ name, val ]) {
+    console.log(name, val);
+}
+function g2 ({ name: n, val: v }) {
+    console.log(n, v);
+}
+function h2 ({ name, val }) {
+    console.log(name, val);
+}
+
+f2([ "bar", 42 ]);
+g2({ name: "foo", val:  7 });
+h2({ name: "bar", val: 42 });
+
+//Fail-Soft Destructuring
+console.log('Fail-Soft Destructuring');
+
+var list = [ 7, 42 ]
+var [ a = 1, b = 2, c = 3, d ] = list
+console.log(a === 7);
+console.log(b === 42);
+console.log(c === 3);
+console.log(d === undefined);
+
+//Classes
+//Class Definition
+
+class Shape {
+    constructor (id, x, y) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+    }
+    move (x, y) {       
+		console.log(this.x + ' ' + this.y)
+    }
+}
+
+const shape = new Shape(0,1,2);
+shape.move();
+
+//Class Inheritance
+
+class Rectangle extends Shape {
+    constructor (id, x, y, width, height) {
+        super(id, x, y)
+        this.width  = width
+        this.height = height
+    }
+}
+
+class Circle extends Shape {
+    constructor (id, x, y, radius) {
+        super(id, x, y)
+        this.radius = radius
+    }
+}
+
+//Class Inheritance, From Expressions
+var aggregation = (baseClass, ...mixins) => {
+    let base = class _Combined extends baseClass {
+        constructor (...args) {
+            super(...args)
+            mixins.forEach((mixin) => {
+                mixin.prototype.initializer.call(this)
+            })
+        }
+    }
+    let copyProps = (target, source) => {
+        Object.getOwnPropertyNames(source)
+            .concat(Object.getOwnPropertySymbols(source))
+            .forEach((prop) => {
+            if (prop.match(/^(?:constructor|prototype|arguments|caller|name|bind|call|apply|toString|length)$/))
+                return
+            Object.defineProperty(target, prop, Object.getOwnPropertyDescriptor(source, prop))
+        })
+    }
+    mixins.forEach((mixin) => {
+        copyProps(base.prototype, mixin.prototype)
+        copyProps(base, mixin)
+    })
+    return base
+}
+
+class Colored {
+    initializer ()     { this._color = "white" }
+    get color ()       { return this._color }
+    set color (v)      { this._color = v }
+}
+
+class ZCoord {
+    initializer ()     { this._z = 0 }
+    get z ()           { return this._z }
+    set z (v)          { this._z = v }
+}
+
+class Shape1 {
+    constructor (x, y) { this._x = x; this._y = y }
+    get x ()           { return this._x }
+    set x (v)          { this._x = v }
+    get y ()           { return this._y }
+    set y (v)          { this._y = v }
+}
+
+class Rectangle1 extends aggregation(Shape1, Colored, ZCoord) {}
+
+var rect = new Rectangle1(7, 42)
+rect.z     = 1000
+rect.color = "red"
+console.log(rect.x, rect.y, rect.z, rect.color)
+

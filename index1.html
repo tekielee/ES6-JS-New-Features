@@ -1,0 +1,17 @@
+<html>
+<head>
+	<title>ES6 JS</title>
+</head>
+<body>
+
+<script type="module">
+	//Modules
+	//Value Export/Import
+	import * as math from "./lib/math";
+	console.log('2π = ' + math.sum(math.pi, math.pi));
+	
+	import { sum, pi } from "./lib/math"
+	console.log("2π = " + sum(pi, pi))
+</script>
+</body>
+</html>
